@@ -15,6 +15,10 @@ const HomeContainer = styled.section.attrs({
   className: "black w-90 db center"
 })``;
 
+const HomeTitle = styled.h1.attrs({
+  className: "f1 ttu mid-gray tc"
+})``;
+
 const ListingItemList = styled.ul.attrs({
   className: "ph0"
 })``;
@@ -105,6 +109,7 @@ const Home = ({ listings }) => {
 
   return (
     <HomeContainer>
+      <HomeTitle>Gaza Talent</HomeTitle>
       <ListingItemList>
         {r.map(listing => (
           <ListingItem key={listing.id}>
