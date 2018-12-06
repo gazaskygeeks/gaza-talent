@@ -6,13 +6,9 @@ const ERROR = 'ERROR'
 const DONE = 'DONE'
 
 export default class Request extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
+    state = {
       requestStatus: PENDING
     }
-  }
 
   componentDidMount() {
     axios[this.props.method](this.props.url)

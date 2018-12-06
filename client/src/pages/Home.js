@@ -5,8 +5,8 @@ const _Home = styled.section.attrs({
   className: "pr3 blue bg-yellow"
 })``;
 
-const Home = () => {
-  return <_Home>Hello world.</_Home>;
+const Home = ({ listings }) => {
+  return <_Home>{listings.toString()}</_Home>;
 };
 
 export default Home;
