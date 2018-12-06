@@ -6,6 +6,9 @@ import {
   IS_AVAILABLE,
   TECHNOLOGIES_EXPERIENCE
 } from "../constants/airtableKeys";
+import profilePhotoPlaceholder from "../assets/profilePhotoPlaceholder.png";
+import githubIcon from "../assets/githubLogo.svg";
+import linkedinIcon from "../assets/linkedinLogo.svg";
 import * as r from "ramda";
 
 const HomeContainer = styled.section.attrs({
@@ -18,7 +21,7 @@ const ListingItemList = styled.ul.attrs({
 
 const ListingItem = styled.li.attrs({
   className:
-    "list ph2 pv3 db mb2 bg-near-white br2 flex flex-column justify-between"
+    "list pa3 db mb2 bg-near-white br2 flex justify-between items-center"
 })``;
 
 const ListingItemNameText = styled.h3.attrs({
@@ -35,15 +38,40 @@ const monthAvailable = listing => {
   return `Available from ${month}`;
 };
 
-const ListingItemTag = styled.li.attrs({
-  className: ({ colour }) =>
-    `br3 f6 b pv1 ph2 bg-light-${colour} dib mb2 mr1 black`
+const ListingItemTag = styled.li.attrs(({ colour }) => ({
+  className: `br3 f6 b pv1 ph2 bg-light-${colour} dib mb2 mr1 black`
+}))``;
+
+const SocialMediaLink = styled.a.attrs({
+  className: "flex justify-between items-center mr3"
 })``;
 
 const ListingItemAvailability = ({ listing }) => {
   const timeAvailable = monthAvailable(listing);
   return <div className="pa2 f4 mid-gray">{timeAvailable}</div>;
 };
+
+const SocialMediaIcon = styled.div.attrs({
+  className: "h2 w2"
+})`
+  background: ${({ imgUrl }) => `center / contain no-repeat url('${imgUrl}')`};
+`;
+
+const SocialMediaText = styled.div.attrs({
+  className: "link"
+})``;
+
+const ProfilePhoto = styled.div.attrs({
+  className: "h4 w-20"
+})`
+  background: ${({
+    listing: { "Profile Photo": photo = profilePhotoPlaceholder }
+  }) => `center / contain no-repeat url('${photo}')`};
+`;
+
+const ListingContentRight = styled.div.attrs({
+  className: "w-70 flex flex-column justify-between"
+})``;
 
 const Home = ({ listings }) => {
   const listingsFiltered = r.filter(listing => {
@@ -60,19 +88,25 @@ const Home = ({ listings }) => {
       <ListingItemList>
         {r.map(listing => (
           <ListingItem key={listing.id}>
-            <ListingItemNameText>{listing.fields.Name}</ListingItemNameText>
-            <ListingItemAvailability listing={listing} />
-            <section className="pl2">
-              {r.addIndex(r.map)((field, i) => {
-                const tagColours = ["green", "pink", "blue", "red"];
-                const colour = tagColours[i % tagColours.length];
-                return (
-                  <ListingItemTag colour={colour} key={`tag-${i}`}>
-                    {field}
-                  </ListingItemTag>
-                );
-              })(listing.fields[TECHNOLOGIES_EXPERIENCE])}
-            </section>
+            <ProfilePhoto listing={listing} />
+            <ListingContentRight>
+              <ListingItemNameText>{listing.fields.Name}</ListingItemNameText>
+              <ListingItemAvailability listing={listing} />
+              <section className="pl2">
+                {listing["GitHub URL"] && (
+                  <SocialMediaLink href={listing["GitHub URL"]}>
+                    <SocialMediaIcon imgUrl={githubIcon} />
+                    <SocialMediaText>{listing["GitHub URL"]}</SocialMediaText>
+                  </SocialMediaLink>
+                )}
+                {listing["LinkedIn URL"] && (
+                  <SocialMediaLink href={listing["LinkedIn URL"]}>
+                    <SocialMediaIcon imgUrl={linkedinIcon} />
+                    <SocialMediaText>{listing["LinkedIn URL"]}</SocialMediaText>
+                  </SocialMediaLink>
+                )}
+              </section>
+            </ListingContentRight>
           </ListingItem>
         ))(listingsFiltered)}
       </ListingItemList>
