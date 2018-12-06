@@ -9,6 +9,6 @@ const port = process.env.PORT || 3000
 
 app.use(express.static('client/build'))
 app.use(morgan('tiny'))
-app.use(require('./routers/airtable'))
+app.use('/api', require('./routers/airtable'))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
