@@ -25,7 +25,7 @@ const ListingItem = styled.li.attrs({
 })``;
 
 const ListingItemNameText = styled.h3.attrs({
-  className: "f3 b tracked ttu mb0"
+  className: "f3 b tracked ttu ma0"
 })``;
 
 const monthAvailable = listing => {
@@ -43,12 +43,12 @@ const ListingItemTag = styled.li.attrs(({ colour }) => ({
 }))``;
 
 const SocialMediaLink = styled.a.attrs({
-  className: "flex justify-between items-center mr3"
+  className: "link flex justify-between items-center mr3 di"
 })``;
 
 const ListingItemAvailability = ({ listing }) => {
   const timeAvailable = monthAvailable(listing);
-  return <div className="pa2 f4 mid-gray">{timeAvailable}</div>;
+  return <div className="pa2 tr mid-gray">{timeAvailable}</div>;
 };
 
 const SocialMediaIcon = styled.div.attrs({
@@ -60,13 +60,30 @@ const SocialMediaIcon = styled.div.attrs({
 const SocialMediaText = styled.div.attrs({
   className: "link"
 })``;
+const ListingTitle = styled.div.attrs({
+  className: "flex justify-between"
+})``;
+
+const ListingJobTitle = styled.div.attrs({
+  className: "flex justify-between b mb3"
+})``;
+
+const ListingBio = styled.div.attrs({
+  className: "flex justify-between i"
+})``;
+
+const ListingTitleSocialMediaLinks = styled.div.attrs({
+  className: "flex"
+})``;
 
 const ProfilePhoto = styled.div.attrs({
   className: "h4 w-20"
 })`
-  background: ${({
-    listing: { "Profile Photo": photo = profilePhotoPlaceholder }
-  }) => `center / contain no-repeat url('${photo}')`};
+  background: ${({ photo }) => {
+    const url = photo && photo[0] && photo[0].thumbnails.large.url;
+    return `center / contain no-repeat url('${url ||
+      profilePhotoPlaceholder}')`;
+  }};
 `;
 
 const ListingContentRight = styled.div.attrs({
@@ -74,38 +91,44 @@ const ListingContentRight = styled.div.attrs({
 })``;
 
 const Home = ({ listings }) => {
-  const listingsFiltered = r.filter(listing => {
-    const fields = listing.fields;
-    if (!fields[IS_AVAILABLE]) {
-      if (fields[UNTIL_AVAILABLE] === "Other") return false;
-      if (fields[UNTIL_AVAILABLE] === "") return false;
-    }
-    return true;
-  })(listings);
+  const listingsFiltered = r.pipe(
+    r.reverse,
+    r.filter(listing => {
+      const fields = listing.fields;
+      if (!fields[IS_AVAILABLE]) {
+        if (fields[UNTIL_AVAILABLE] === "Other") return false;
+        if (fields[UNTIL_AVAILABLE] === "") return false;
+      }
+      return true;
+    })
+  )(listings);
 
   return (
     <HomeContainer>
       <ListingItemList>
         {r.map(listing => (
           <ListingItem key={listing.id}>
-            <ProfilePhoto listing={listing} />
+            <ProfilePhoto photo={listing.fields["Profile Photo"]} />
             <ListingContentRight>
-              <ListingItemNameText>{listing.fields.Name}</ListingItemNameText>
+              <ListingTitle>
+                <ListingItemNameText>{listing.fields.Name}</ListingItemNameText>
+                <ListingTitleSocialMediaLinks>
+                  {listing.fields["GitHub URL"] && (
+                    <SocialMediaLink href={listing.fields["GitHub URL"]}>
+                      <SocialMediaIcon imgUrl={githubIcon} />
+                    </SocialMediaLink>
+                  )}
+                  {listing.fields["LinkedIn URL"] && (
+                    <SocialMediaLink href={listing.fields["LinkedIn URL"]}>
+                      <SocialMediaIcon imgUrl={linkedinIcon} />
+                    </SocialMediaLink>
+                  )}
+                </ListingTitleSocialMediaLinks>
+              </ListingTitle>
+              <ListingJobTitle>{listing.fields["Job Title"]}</ListingJobTitle>
+              <ListingBio>{listing.fields["Bio"]}</ListingBio>
               <ListingItemAvailability listing={listing} />
-              <section className="pl2">
-                {listing["GitHub URL"] && (
-                  <SocialMediaLink href={listing["GitHub URL"]}>
-                    <SocialMediaIcon imgUrl={githubIcon} />
-                    <SocialMediaText>{listing["GitHub URL"]}</SocialMediaText>
-                  </SocialMediaLink>
-                )}
-                {listing["LinkedIn URL"] && (
-                  <SocialMediaLink href={listing["LinkedIn URL"]}>
-                    <SocialMediaIcon imgUrl={linkedinIcon} />
-                    <SocialMediaText>{listing["LinkedIn URL"]}</SocialMediaText>
-                  </SocialMediaLink>
-                )}
-              </section>
+              <section className="pl2" />
             </ListingContentRight>
           </ListingItem>
         ))(listingsFiltered)}
