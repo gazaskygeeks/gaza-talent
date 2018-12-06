@@ -31,12 +31,11 @@ const onDone = (res, records) => err => {
 router.get('/talent', (req, res) => {
   let totalRecords = []
 
-  base(tableName).select({
-    view: 'Grid view'
-  }).eachPage(
-    onNextPage(totalRecords),
-    onDone(res, totalRecords)
-  )
+  base(tableName)
+    .select({
+      view: 'Grid view'
+    })
+    .eachPage(onNextPage(totalRecords), onDone(res, totalRecords))
 })
 
 module.exports = router
