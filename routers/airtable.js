@@ -1,41 +1,41 @@
-const express = require('express')
-const Airtable = require('airtable')
+const express = require("express");
+const Airtable = require("airtable");
 
 Airtable.configure({
-  endpointUrl: 'https://api.airtable.com',
+  endpointUrl: "https://api.airtable.com",
   apiKey: process.env.AIRTABLE_API_KEY
-})
+});
 
-const tableName = 'Freelancers Cohort 4 & 5 Availability'
+const tableName = "Freelancers Cohort 4 & 5 Availability";
 
-const base = Airtable.base('appgBOlw7B0N1kQiq')
-const router = new express.Router()
+const base = Airtable.base("appgBOlw7B0N1kQiq");
+const router = new express.Router();
 
 const onNextPage = recordPrev => (records, fetchNextPage) => {
   records.forEach(record => {
-    recordPrev.push(record)
-  })
+    recordPrev.push(record);
+  });
 
-  fetchNextPage()
-}
+  fetchNextPage();
+};
 
 const onDone = (res, records) => err => {
   if (err) {
-    console.error(err)
-    return res.notFound()
+    console.error(err);
+    return res.notFound();
   }
 
-  return res.json(records)
-}
+  return res.json(records);
+};
 
-router.get('/talent', (req, res) => {
-  let totalRecords = []
+router.get("/talent", (req, res) => {
+  let totalRecords = [];
 
   base(tableName)
     .select({
-      view: 'Grid view'
+      view: "Grid view"
     })
-    .eachPage(onNextPage(totalRecords), onDone(res, totalRecords))
-})
+    .eachPage(onNextPage(totalRecords), onDone(res, totalRecords));
+});
 
-module.exports = router
+module.exports = router;
