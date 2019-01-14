@@ -1,2 +1,3 @@
 import Home from "./Home";
-export { Home };
+import GithubCallback from "./GithubCallback";
+export { Home, GithubCallback };

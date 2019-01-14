@@ -17,7 +17,8 @@ const binAndMerge = (getKey, records) => {
   return out;
 };
 
-module.exports = (req, res) => {
+const getAll = (req, res) => {
+  console.log("Getting profiles", { session: req.session });
   Promise.all([getAllPeople(), getAllProfiles()])
     .then(([personList, profileList]) => {
       return {
@@ -30,7 +31,10 @@ module.exports = (req, res) => {
     })
     .then(({ people, profiles }) => {
       Object.keys(profiles).forEach(name => {
-        Object.assign(people[name].fields, profiles[name].fields);
+        people[name].fields;
+        if (people[name]) {
+          Object.assign(people[name].fields, profiles[name].fields);
+        }
       });
 
       return Object.keys(people).map(name => people[name]);
@@ -43,4 +47,8 @@ module.exports = (req, res) => {
 
       res.status(500).send("something is not working. Sorry :(");
     });
+};
+
+module.exports = {
+  getAll
 };

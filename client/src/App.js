@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { Home } from "./pages";
+import { Home, GithubCallback } from "./pages";
 
 import Request from "./components/Request";
 
@@ -11,14 +11,18 @@ class App extends Component {
   };
 
   renderError = err => {
-    return <div>{err}</div>;
+    return <div>{err.toString()}</div>;
+  };
+
+  renderGithubCallback = () => {
+    return <GithubCallback />;
   };
 
   renderHome = () => {
     return (
       <Request
         method="get"
-        url="/api/talent"
+        url="/api/profile"
         renderPending={this.renderPending}
         renderError={this.renderError}
       >
@@ -29,11 +33,16 @@ class App extends Component {
 
   render() {
     return (
-      <main>
-        <Router>
+      <Router>
+        <main>
+          <Route
+            exact
+            path="/github/callback"
+            render={this.renderGithubCallback}
+          />
           <Route exact path="/" render={this.renderHome} />
-        </Router>
-      </main>
+        </main>
+      </Router>
     );
   }
 }

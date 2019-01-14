@@ -11,7 +11,11 @@ export default class Request extends Component {
   };
 
   componentDidMount() {
-    axios[this.props.method](this.props.url).then(
+    axios[this.props.method](this.props.url, {
+      headers: {
+        Authorization: `Bearer ${window.localStorage.getItem("jwt")}`
+      }
+    }).then(
       response => {
         this.setState({
           payload: response.data,
@@ -32,6 +36,8 @@ export default class Request extends Component {
       state: { requestStatus, payload, error },
       props: { renderPending, renderError, children }
     } = this;
+
+    console.log("rendering", requestStatus);
 
     if (requestStatus === PENDING) return renderPending();
 

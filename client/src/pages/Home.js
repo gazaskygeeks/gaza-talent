@@ -10,6 +10,20 @@ import profilePhotoPlaceholder from "../assets/profilePhotoPlaceholder.png";
 import githubIcon from "../assets/githubLogo.svg";
 import linkedinIcon from "../assets/linkedinLogo.svg";
 import * as r from "ramda";
+const qs = require("querystring");
+
+const loginUrl = `https://github.com/login/oauth/authorize?${qs.stringify({
+  client_id: process.env.REACT_APP_GITHUB_CLIENT_ID,
+  redirect_uri: process.env.REACT_APP_GITHUB_CALLBACK_URL
+})}`;
+
+console.log(loginUrl);
+
+const LoginLink = () => (
+  <a className="link f6 fr black hover-orange" href={loginUrl}>
+    Developer Login
+  </a>
+);
 
 const HomeContainer = styled.section.attrs({
   className: "black w-90 db center"
@@ -109,6 +123,7 @@ const Home = ({ listings }) => {
 
   return (
     <HomeContainer>
+      <LoginLink />
       <HomeTitle>Gaza Talent</HomeTitle>
       <ListingItemList>
         {r.map(listing => (
