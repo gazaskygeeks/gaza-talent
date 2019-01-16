@@ -6,22 +6,15 @@ const ERROR = "ERROR";
 const DONE = "DONE";
 
 export default class FetchData extends Component {
-  constructor(props) {
-    super(props);
-
-    this.request = this.request.bind(this);
-  }
-
   state = {
     requestStatus: PENDING
   };
 
-  request(payload) {
+  componentDidMount() {
     axios[this.props.method](this.props.url, {
       headers: {
         Authorization: `Bearer ${window.localStorage.getItem("jwt")}`
-      },
-      body: payload
+      }
     }).then(
       response => {
         this.setState({
@@ -44,11 +37,12 @@ export default class FetchData extends Component {
       props: { renderPending, renderError, children }
     } = this;
 
-    return children({
-      request: this.request,
-      payload,
-      status: requestStatus,
-      error
-    });
+    console.log("rendering", requestStatus);
+
+    if (requestStatus === PENDING) return renderPending();
+
+    if (requestStatus === ERROR) return renderError(error);
+
+    return children(payload);
   }
 }

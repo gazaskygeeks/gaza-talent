@@ -11,7 +11,7 @@ class GithubCallback extends React.Component {
     axios.get(`/api/github/callback?code=${code}`).then(jwt => {
       window.localStorage.setItem("jwt", jwt.data.token);
 
-      this.props.history.push("/");
+      this.props.history.push("/developer-dashboard");
     });
   }
 

@@ -72,5 +72,12 @@
 @import "tachyons-custom/src/_debug-children";
 @import "tachyons-custom/src/_debug-grid";
 
+.pa05 {
+  padding: 0.125rem;
+}
+.bw05 {
+  padding: 0.0625rem;
+}
+
 /* Uncomment out the line below to help debug layout issues */
 /* @import "tachyons-custom/src/_debug"; */
