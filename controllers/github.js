@@ -7,11 +7,13 @@ const airtable = require("../lib/airtable.js");
 const callback = wrapAsync(async (req, res) => {
   const userAccessToken = (await accessToken(req.query.code)).access_token;
   const userProfile = await currentUser(userAccessToken);
-  const userExists = airtable.userExists(userProfile.login);
+  const githubUsername = userProfile.login;
+  // const airtableUser = await airtable.getUserFromGithubUsername(githubUsername);
+  // console.log({ airtableUser });
 
-  if (!userExists) {
-    return res.status(404).json({ error: "user does not exist" });
-  }
+  // if (!userExists) {
+  //   return res.status(404).json({ error: "user does not exist" });
+  // }
 
   res.json({
     token: jwt.sign(

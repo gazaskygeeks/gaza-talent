@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken");
 const sessionMiddleware = wrapAsync(async (req, res, next) => {
   const authHeader = req.get("Authorization");
 
-  console.log(req.headers);
-  console.log("session middleware", { authHeader });
   if (authHeader) {
     const token = authHeader.split(" ")[1];
     let tokenPayload;
@@ -15,7 +13,6 @@ const sessionMiddleware = wrapAsync(async (req, res, next) => {
       console.error(e);
     }
 
-    console.log({ tokenPayload });
     req.session = tokenPayload;
   }
 

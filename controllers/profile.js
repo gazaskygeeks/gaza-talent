@@ -1,4 +1,5 @@
 const { getAllPeople, getAllProfiles } = require("../lib/airtable");
+const pg = require("../postgres");
 
 const binAndMerge = (getKey, records) => {
   const out = {};
@@ -17,8 +18,62 @@ const binAndMerge = (getKey, records) => {
   return out;
 };
 
+const create = (req, res) => {
+  const freelancerData = req.body;
+  const { airtableId, githubUsername } = req.session;
+
+  pg.createFreelancer({
+    airtableId: "1",
+    githubUsername,
+    freelancerData
+  })
+    .then(() => {
+      res.json({
+        success: true
+      });
+    })
+    .catch(e => {
+      console.error(e);
+      res.status("500").json({
+        error: e
+      });
+    });
+};
+
+const getCurrent = (req, res) => {
+  const { githubUsername } = req.session;
+
+  pg.getFreelancer(githubUsername)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(e => {
+      console.error(e);
+      res.status("500").json({
+        error: e
+      });
+    });
+};
+
+const update = (req, res) => {
+  const freelancerData = req.body;
+  const { githubUsername } = req.session;
+
+  pg.updateFreelancer(githubUsername, freelancerData)
+    .then(() => {
+      res.json({
+        success: true
+      });
+    })
+    .catch(e => {
+      console.error(e);
+      res.status("500").json({
+        error: e
+      });
+    });
+};
+
 const getAll = (req, res) => {
-  console.log("Getting profiles", { session: req.session });
   Promise.all([getAllPeople(), getAllProfiles()])
     .then(([personList, profileList]) => {
       return {
@@ -50,5 +105,8 @@ const getAll = (req, res) => {
 };
 
 module.exports = {
+  create,
+  update,
+  getCurrent,
   getAll
 };

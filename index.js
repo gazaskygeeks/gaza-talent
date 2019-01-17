@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
 require("env2")(".env"); // configure enviroment (in ./.env)
@@ -13,8 +14,11 @@ const profileController = require("./controllers/profile.js");
 const app = express();
 
 // MIDDLEWARE
-app.use(morgan("tiny"));
-app.use(sessionMiddleware);
+app
+  .use(morgan("tiny"))
+  .use(bodyParser.urlencoded({ extended: true }))
+  .use(bodyParser.json())
+  .use(sessionMiddleware);
 
 // CLIENT
 app.use(express.static("client/build"));
@@ -23,6 +27,9 @@ app.use(express.static("client/build"));
 const apiRouter = new express.Router();
 
 apiRouter.get("/profile", profileController.getAll);
+apiRouter.post("/profile", profileController.create);
+apiRouter.put("/profile", profileController.update);
+apiRouter.get("/profile/current", profileController.getCurrent);
 apiRouter.get("/github/callback", githubController.callback);
 
 app.use("/api", apiRouter);
