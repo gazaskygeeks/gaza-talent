@@ -55,6 +55,21 @@ const getCurrent = (req, res) => {
     });
 };
 
+const get = (req, res) => {
+  const { githubUsername } = req.params;
+
+  pg.getFreelancer(githubUsername)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(e => {
+      console.error(e);
+      res.status("500").json({
+        error: e
+      });
+    });
+};
+
 const update = (req, res) => {
   const freelancerData = req.body;
   const { githubUsername } = req.session;
@@ -108,5 +123,6 @@ module.exports = {
   create,
   update,
   getCurrent,
+  get,
   getAll
 };

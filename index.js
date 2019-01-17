@@ -30,6 +30,7 @@ apiRouter.get("/profile", profileController.getAll);
 apiRouter.post("/profile", profileController.create);
 apiRouter.put("/profile", profileController.update);
 apiRouter.get("/profile/current", profileController.getCurrent);
+apiRouter.get("/profile/:githubUsername", profileController.get);
 apiRouter.get("/github/callback", githubController.callback);
 
 app.use("/api", apiRouter);

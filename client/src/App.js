@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { Home, GithubCallback, DeveloperDashboard } from "./pages";
+import {
+  Home,
+  GithubCallback,
+  DeveloperDashboard,
+  DeveloperProfile
+} from "./pages";
 
 import FetchData from "./components/FetchData";
 
@@ -27,6 +32,24 @@ class App extends Component {
         renderError={this.renderError}
       >
         {savedProfile => <DeveloperDashboard savedProfile={savedProfile} />}
+      </FetchData>
+    );
+  };
+
+  renderDeveloperProfile = routerProps => {
+    const {
+      match: {
+        params: { profileId }
+      }
+    } = routerProps;
+    return (
+      <FetchData
+        method="get"
+        url={`/api/profile/${profileId}`}
+        renderPending={this.renderPending}
+        renderError={this.renderError}
+      >
+        {profile => <DeveloperProfile profile={profile} />}
       </FetchData>
     );
   };
@@ -57,6 +80,10 @@ class App extends Component {
             exact
             path="/developer-dashboard"
             render={this.renderDeveloperDashboard}
+          />
+          <Route
+            path="/profile/:profileId"
+            render={this.renderDeveloperProfile}
           />
           <Route exact path="/" render={this.renderHome} />
         </main>

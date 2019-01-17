@@ -1,7 +1,7 @@
 import React from "react";
 import AutosizeInput from "react-input-autosize";
 import { CLASS_NAME_INPUT_SPACING } from "../constants/typeographyClassNames";
-export default class EditableInput extends React.Component {
+export default class PaperText extends React.Component {
   constructor() {
     super();
 
@@ -14,15 +14,23 @@ export default class EditableInput extends React.Component {
   }
 
   onFocus(e) {
-    this.setState({
-      focused: true
-    });
+    if (this.props.enabled) {
+      this.setState({
+        focused: true
+      });
+      e.preventDefault();
+      e.stopProgagation();
+    }
   }
 
-  onBlur() {
-    this.setState({
-      focused: false
-    });
+  onBlur(e) {
+    if (this.props.enabled) {
+      this.setState({
+        focused: false
+      });
+      e.preventDefault();
+      e.stopProgagation();
+    }
   }
 
   render() {

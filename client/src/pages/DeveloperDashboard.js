@@ -2,10 +2,22 @@ import React from "react";
 import axios from "axios";
 
 import { get as getSession } from "../session";
-import EditableInput from "../components/EditableInput";
+import PaperText from "../components/PaperText";
 import Button from "../components/Button";
 import CloseIcon from "../icons/Close";
 import IconOnHover from "../components/IconOnHover";
+import ProfileWrapper from "../components/profile/ProfileWrapper";
+import H2EmploymentHistory from "../components/profile/H2EmploymentHistory";
+import ResponsibilitiesList from "../components/profile/ResponsibilitiesList";
+import EmploymentHistoryWrapper from "../components/profile/EmploymentHistoryWrapper";
+import ResponsibilitiesListItem from "../components/profile/ResponsibilitiesListItem";
+
+import {
+  CLASS_NAME_H1,
+  CLASS_NAME_H1_SUB,
+  CLASS_NAME_H3,
+  CLASS_NAME_H3_SUB
+} from "../constants/typeographyClassNames";
 
 const PENDING = "PENDING";
 const SUCCESS = "SUCCESS";
@@ -134,140 +146,139 @@ export default class DeveloperDashboard extends React.Component {
     } = this;
 
     return (
-      <div className="tc">
-        <div className="bl bw05 min-vh-100 b--light-gray w-50 dib pa3">
-          <div>
-            <EditableInput
-              name="name"
-              value={name}
-              onChange={onChange}
-              className="f3 black"
-            />
-          </div>
-          <div>
-            <EditableInput
-              name="jobTitle"
-              className="f6 mid-gray"
-              value={jobTitle}
-              onChange={onChange}
-            />
-          </div>
-          <h3 className="tl ma0 pa2 ba bw1 b--white f5 bold black">
-            Employment History
-          </h3>
-          {employmentHistory.map((employmentItem, i) => (
-            <IconOnHover
-              onClick={this.deleteElement}
-              name={`employmentHistory.${i}`}
-              Icon={
-                <CloseIcon className="fr w08 h08 pa1 ml1 hover-bg-light-gray pointer" />
-              }
-            >
-              <div className="tl" key={`employmentHistory.${i}`}>
-                <div className="db">
-                  <EditableInput
-                    name={`employmentHistory.${i}.title`}
-                    className="dib f5 black"
-                    value={employmentItem.title}
-                    onChange={onChange}
-                  />
-                  {"-"}
-                  <EditableInput
-                    name={`employmentHistory.${i}.company`}
-                    className="dib f5 black"
-                    value={employmentItem.company}
-                    onChange={onChange}
-                  />
-                </div>
-                <EditableInput
-                  name={`employmentHistory.${i}.dates`}
-                  className="f6 mid-gray"
-                  value={employmentItem.dates}
-                  onChange={onChange}
-                />
-                <ul className="mh0 mv2 pv0">
-                  {employmentItem.responsibilities.map((r, j) => {
-                    const name = `employmentHistory.${i}.responsibilities.${j}`;
-                    return (
-                      <IconOnHover
-                        onClick={this.deleteElement}
-                        name={name}
-                        Icon={
-                          <CloseIcon className="fr w08 h08 pa1 ml1 hover-bg-light-gray pointer" />
-                        }
-                      >
-                        <li
-                          className="mv0 pv0"
-                          key={`responsibility.${i}.${j}`}
-                        >
-                          <EditableInput
-                            name={name}
-                            className="dib f6 black"
-                            value={r}
-                            onChange={onChange}
-                          />
-                        </li>
-                      </IconOnHover>
-                    );
-                  })}
-                  <Button
-                    className="f7 gold ma1 pa2 w-100"
-                    onClick={() => {
-                      onChange({
-                        target: {
-                          value: "responsibility description",
-                          name: `employmentHistory.${i}.responsibilities.${
-                            employmentItem.responsibilities.length
-                          }`
-                        }
-                      });
-                    }}
-                  >
-                    Add responsibility
-                  </Button>
-                </ul>
-              </div>
-            </IconOnHover>
-          ))}
-          <Button
-            className="f7 gold ma1 pa2 w-100"
-            onClick={() => {
-              onChange({
-                target: {
-                  value: {
-                    title: "Job Title",
-                    company: "Company Name",
-                    dates: "[month] [year] - [month] [year] || Current",
-                    responsibilities: []
-                  },
-                  name: `employmentHistory.${employmentHistory.length}`
-                }
-              });
-            }}
-          >
-            Add Employment Item
-          </Button>
-          <div>
-            <Button
-              className="f7 ma1 pa2 fr"
-              disabled={
-                this.state.updateFreelancerRequestStatus === PENDING ||
-                this.state.pristine
-              }
-              onClick={this.updateFreelancer}
-              primary
-            >
-              Save
-            </Button>
-            <Button className="f7 ma1 pa2 fr" onClick={() => {}}>
-              Preview
-            </Button>
-            <Button className="f7 ma1 pa2 fr" onClick={() => {}}>
-              Cancel
-            </Button>
-          </div>
+      <ProfileWrapper>
+        <div>
+          <PaperText
+            enabled
+            name="name"
+            value={name}
+            onChange={onChange}
+            className={CLASS_NAME_H1}
+          />
         </div>
-      </div>
+        <div>
+          <PaperText
+            enabled
+            name="jobTitle"
+            className={CLASS_NAME_H1_SUB}
+            value={jobTitle}
+            onChange={onChange}
+          />
+        </div>
+        <H2EmploymentHistory />
+        {employmentHistory.map((employmentItem, i) => (
+          <IconOnHover
+            onClick={this.deleteElement}
+            name={`employmentHistory.${i}`}
+            Icon={
+              <CloseIcon className="fr w08 h08 pa1 ml1 hover-bg-light-gray pointer" />
+            }
+          >
+            <EmploymentHistoryWrapper>
+              <PaperText
+                enabled
+                name={`employmentHistory.${i}.title`}
+                className={CLASS_NAME_H3}
+                value={employmentItem.title}
+                onChange={onChange}
+              />
+              {"-"}
+              <PaperText
+                enabled
+                name={`employmentHistory.${i}.company`}
+                className={CLASS_NAME_H3}
+                value={employmentItem.company}
+                onChange={onChange}
+              />
+              <br />
+              <PaperText
+                enabled
+                name={`employmentHistory.${i}.dates`}
+                className="f6 mid-gray"
+                value={employmentItem.dates}
+                onChange={onChange}
+              />
+              <ResponsibilitiesList>
+                {employmentItem.responsibilities.map((r, j) => {
+                  const name = `employmentHistory.${i}.responsibilities.${j}`;
+                  return (
+                    <IconOnHover
+                      onClick={this.deleteElement}
+                      name={name}
+                      Icon={
+                        <CloseIcon className="fr w08 h08 pa1 ml1 hover-bg-light-gray pointer" />
+                      }
+                    >
+                      <ResponsibilitiesListItem
+                        key={`responsibility.${i}.${j}`}
+                      >
+                        <PaperText
+                          enabled
+                          name={name}
+                          value={r}
+                          onChange={onChange}
+                        />
+                      </ResponsibilitiesListItem>
+                    </IconOnHover>
+                  );
+                })}
+                <Button
+                  className="f7 gold ma1 pa2 w-100"
+                  onClick={() => {
+                    onChange({
+                      target: {
+                        value: "responsibility description",
+                        name: `employmentHistory.${i}.responsibilities.${
+                          employmentItem.responsibilities.length
+                        }`
+                      }
+                    });
+                  }}
+                >
+                  Add responsibility
+                </Button>
+              </ResponsibilitiesList>
+            </EmploymentHistoryWrapper>
+          </IconOnHover>
+        ))}
+        <Button
+          className="f7 gold ma1 pa2 w-100"
+          onClick={() => {
+            onChange({
+              target: {
+                value: {
+                  title: "Job Title",
+                  company: "Company Name",
+                  dates: "[month] [year] - [month] [year] || Current",
+                  responsibilities: []
+                },
+                name: `employmentHistory.${employmentHistory.length}`
+              }
+            });
+          }}
+        >
+          Add Employment Item
+        </Button>
+        <div>
+          <Button
+            className="f7 ma1 pa2 fr"
+            disabled={
+              this.state.updateFreelancerRequestStatus === PENDING ||
+              this.state.pristine
+            }
+            onClick={this.updateFreelancer}
+            primary
+          >
+            Save
+          </Button>
+          <Button className="f7 ma1 pa2 fr" onClick={() => {}}>
+            Preview
+          </Button>
+          <Button className="f7 ma1 pa2 fr" onClick={() => {}}>
+            Cancel
+          </Button>
+        </div>
+      </ProfileWrapper>
     );
   }
 }
