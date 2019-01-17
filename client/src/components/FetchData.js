@@ -37,8 +37,6 @@ export default class FetchData extends Component {
       props: { renderPending, renderError, children }
     } = this;
 
-    console.log("rendering", requestStatus);
-
     if (requestStatus === PENDING) return renderPending();
 
     if (requestStatus === ERROR) return renderError(error);

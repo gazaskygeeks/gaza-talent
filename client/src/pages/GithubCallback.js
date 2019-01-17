@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
+import { set as setSession } from "../session";
 
 class GithubCallback extends React.Component {
   componentDidMount() {
@@ -9,7 +10,7 @@ class GithubCallback extends React.Component {
     const code = params.get("code");
 
     axios.get(`/api/github/callback?code=${code}`).then(jwt => {
-      window.localStorage.setItem("jwt", jwt.data.token);
+      setSession(jwt.data.token);
 
       this.props.history.push("/developer-dashboard");
     });

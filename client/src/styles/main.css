@@ -78,6 +78,18 @@
 .bw05 {
   padding: 0.0625rem;
 }
+.w05 {
+  width: 0.5rem;
+}
+.h05 {
+  height: 0.5rem;
+}
+.w08 {
+  width: 0.8rem;
+}
+.h08 {
+  height: 0.8rem;
+}
 
 /* Uncomment out the line below to help debug layout issues */
 /* @import "tachyons-custom/src/_debug"; */
